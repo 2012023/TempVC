@@ -21,6 +21,7 @@ discord.py, i thinmk
 1. the bot is a bug
 2. the bot tends to forgor 💀
 3. boys ar e kinda cute ngl 😳🤤
+* the bot stores list of channels in variables, cus it's fricking dumb :skull:
 4. the bot is kinda french bread 🥖 (do not search up french bread on google translate 😳)
 5. i might have accedently 🥺 posted my discord bot token 😤😡 on the interwebs 🥰🥰🥺
 6. im liturally dogwalter at wrting coed
