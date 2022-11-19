@@ -28,7 +28,7 @@ feel free to screenshot
 9. ![FZG9KJjXkAE15pH](https://user-images.githubusercontent.com/76204544/202875707-02794610-7b79-4d99-976c-f9507d37a484.jpg)
 10. global variables is my porfessionality (i liturlarrly dont know what i am doing)
 11. im a professional boy kisser 💔 (i wish)
-12. me when uhmmm ummm men 😳 men boys 😳 i like boyus 😳 im a boy liker 😳 i like kissing men oin the lips 😳😳😳:drool:😳😳😳😳😳
+12. me when uhmmm ummm men 😳 men boys 😳 i like boyus 😳 im a boy liker 😳 i like kissing men oin the lips 😳😳😳🤤🤤😳😳😳😳
 13. oshit i was metn to list bot bugs but if orgor 💀
 14. btw im not gay guys i swear
 
