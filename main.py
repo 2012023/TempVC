@@ -5,75 +5,95 @@ from discord.ext import commands
 intents = discord.Intents.default()
 intents.message_content = True
 
-bot = commands.Bot(command_prefix=".", intents=intents)
+bot = commands.Bot(command_prefix=".", intents=intents, activity=discord.Activity(type=discord.ActivityType.playing, name=" .help doesnt work lmao"))
+
+bot.lobbies = dict()
+bot.new_category = False
 
 # User defined variables
-DISCORD_TOKEN = # INSERT DISCORD TOKEN HERE
+DISCORD_TOKEN = # INSERT TOKEN HERE
 join_channel = # INSERT JOIN CHANNEL ID HERE
-
-marked_for_deletion = dict()
+bot.category_position = # INSERT POSITION (INT)
 
 
 async def create_lobby(member):
-    global marked_for_deletion
-
-    # Generate new category
     guild = member.guild
-    new_category = await guild.create_category(f"{member.name}'s private lobby", position=1)
 
-    # Generate new channels in new category
-    new_voice_channel = await new_category.create_voice_channel(f"{member.name}'s VC")
-    new_text_channel = await new_category.create_text_channel(f"VC Chat")
-    print(f"'{new_category}' created")
+    # Generate new category if necessary
+    if not bot.new_category:
+        bot.new_category = await guild.create_category(f"private lobbies", position=bot.category_position)
 
-    # Append all generated channels in marked_for_deletion
-    marked_for_deletion[new_category.id] = [new_category.id, new_text_channel.id, new_voice_channel.id]
+    # Generate new VC with new Lobby ID
+    number = min([x + 1 for x in range((len(bot.lobbies) + 1)) if x + 1 not in [bot.lobbies[x]["Lobby ID"] for x in bot.lobbies]])
+    new_voice_channel = await bot.new_category.create_voice_channel(f"┗ {number} • {member.name}'s channel", bitrate=96000)
+    try:
+        await member.move_to(new_voice_channel)
+    except Exception as e:
+        print(e)
+        await check_before_channel(member, new_voice_channel)
 
-    # Move user to newly created voice channel
-    await member.move_to(new_voice_channel)
+    # Generate new Text Channel
+    setup_overwrite = {guild.default_role: discord.PermissionOverwrite(view_channel=False), member: discord.PermissionOverwrite(view_channel=True)}
+    new_text_channel = await bot.new_category.create_text_channel(f"{member.name}s chat", overwrites=setup_overwrite)
 
-async def check_before_channel(before_channel):
-    # Check if channel is empty, and deletes category including all channels
-    if before_channel.category.id in marked_for_deletion and len(bot.get_channel(before_channel.id).members) == 0:
+    # Append all generated channels in bot.lobbies and buttons_dict
+    bot.lobbies[new_voice_channel.id] = {"overwrites": setup_overwrite, "chat": new_text_channel, "voice": new_voice_channel, "Lobby ID": number}
+
+    # Sets channel permissions
+    await check_before_channel(member, new_voice_channel, change_permission=False)
+
+
+async def check_before_channel(member, before_channel, change_permission=True):
+
+    # Removes view_channel permission when channel is left
+    if change_permission:
+        if before_channel.id in bot.lobbies:
+            bot.lobbies[before_channel.id]["overwrites"][member] = discord.PermissionOverwrite(view_channel=False)
+            await bot.lobbies[before_channel.id]["chat"].edit(overwrites=bot.lobbies[before_channel.id]["overwrites"])
+
+    # Check if channel is empty, if so, deletes category including all channels
+    if before_channel.id in bot.lobbies and len(bot.get_channel(before_channel.id).members) == 0:
         marked_category = before_channel.category
 
         # Deletes channels in category if channels are marked for deletion
-        for channel in marked_category.channels:
-            if channel.id in marked_for_deletion[before_channel.category.id]:
-                await channel.delete()
+        await bot.lobbies[before_channel.id]["chat"].delete()
+        await bot.lobbies[before_channel.id]["voice"].delete()
 
-        # Deletes category if category is in marked_for_deletion
-        await bot.get_channel(marked_category.id).delete()
+        # Deletes channels from bot.lobbies
+        del bot.lobbies[before_channel.id]
 
-        del marked_for_deletion[before_channel.category.id]
-
-        print("Channel", before_channel.name, "deleted")
+        # Deletes category if category is empty
+        if not marked_category.channels:
+            await bot.get_channel(marked_category.id).delete()
+            bot.new_category = False
 
 
 async def check_channels(member, before_channel, after_channel):
+
     # Checks if channel user left exists
     if before_channel is not None:
-        await check_before_channel(before_channel)
+        await check_before_channel(member, before_channel)
 
-    # Checks if channel user joined is join_channel
     if after_channel is not None:
+        # Checks if user is in "Create VC" channel
         if after_channel.id == join_channel:
-          print(f"{member.name} entered 'Create VC' channel")
-          await create_lobby(member)
+            await create_lobby(member)
+
+        # Sets view-permissions when channel is joined
+        if after_channel.id in bot.lobbies:
+            bot.lobbies[after_channel.id]["overwrites"][member] = discord.PermissionOverwrite(view_channel=True)
+            await bot.lobbies[after_channel.id]["chat"].edit(overwrites=bot.lobbies[after_channel.id]["overwrites"])
 
 
 @bot.event
 async def on_voice_state_update(member, before, after):
-    print(f"{member} went from {before.channel} to {after.channel}.")
     await check_channels(member, before.channel, after.channel)
 
 
 @bot.event
 async def on_ready():
-    print('Logged in')
-    print(bot.user.name)
-    print(bot.user.id)
-    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name=" .help doesnt work lmao"))
+    print(f"{bot.user.name} logged in")
+
 
 async def main():
     await bot.start(DISCORD_TOKEN)
