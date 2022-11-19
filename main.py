@@ -39,7 +39,7 @@ async def create_lobby(member):
     # Append all generated channels in bot.lobbies and buttons_dict
     bot.lobbies[new_voice_channel.id] = {"overwrites": setup_overwrite, "chat": new_text_channel, "voice": new_voice_channel, "Lobby ID": number}
 
-    # Sets channel permissions
+    # Checks if user has left VC before code has finnished, because my code is ass.
     await check_before_channel(member, new_voice_channel, change_permission=False)
 
 
