@@ -28,8 +28,8 @@ discord.py, i thinmk
 8. global variables is my porfessionality (i liturlarrly dont know what i am doing)
 9. im a professional boy kisser 💔 (i wish)
 10. me when uhmmm ummm men 😳 men boys 😳 i like boyus 😳 im a boy liker 😳 i like kissing men oin the lips 😳😳😳😳😳😳😳😳😳
-11. oshit this is bot bugs if orgor 💀
-12. im not gay guys i swear
+11. oshit i was metn to list bot bugs but if orgor 💀
+12. im not gay guys i swear (cries in gay, wtf9)
 
 # pro tip™️
 do not trust the bot
