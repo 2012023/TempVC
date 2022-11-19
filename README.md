@@ -1,5 +1,5 @@
 # haiiiii ^_^ hi!! <3 haiiiiiii hii :)
-## this is shit discord botmake me sufrfer. 💀
+## this is shit temp vc discord bot that makes me sufrfer. 💀
 
 ![bruh](https://i.ibb.co/3rSwMQh/9634c84aee630758edb218053d8f04e7.jpg)
 
